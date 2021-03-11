@@ -1,0 +1,254 @@
+---
+title: "Bis15L Final Project"
+author: "Anthony Weidner, Jiaying Liu, Omar Afzal"
+date: "`r Sys.Date()`"
+output:
+  html_document: 
+    keep_md: yes
+    theme: spacelab
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Instructions
+Answer the following questions and complete the exercises in RMarkdown. Please embed all of your code and push your final work to your repository. Your code should be organized, clean, and run free from errors. Be sure to **add your name** to the author header above. You may use any resources to answer these questions (including each other), but you may not post questions to Open Stacks or external help sites. There are 10 total questions.  
+
+Make sure to use the formatting conventions of RMarkdown to make your report neat and clean! Your plots should use consistent aesthetics throughout. Feel free to be creative- there are many possible solutions to these questions!  
+
+
+## Load the libraries
+```{r}
+library(tidyverse)
+library(janitor)
+library(here)
+options(scipen=999) #disables scientific notation when printing
+library(ggthemes)
+library(skimr)
+library(shiny)
+library(shinydashboard)
+```
+
+
+```{r}
+cancer_general_data <- readr::read_csv("data/GDO_data_wide.csv")
+cancer_general_data <- janitor::clean_names(cancer_general_data)
+cancer_general_data
+```
+
+
+
+#Taking a glance at the data set.
+```{r}
+skim(cancer_general_data)
+```
+
+
+
+#Cleaning up the data so that missing values are stored as NAs.
+```{r}
+cancer_general_data_clean <- cancer_general_data %>%
+  na_if(".a") %>%
+  na_if(".b") %>% na_if(".c") %>% na_if(".d") %>% na_if(".e") %>% na_if(".f") %>% na_if(".g") %>% na_if(".h") %>% na_if(".i") %>% na_if(".j")%>% na_if(".k")%>% na_if(".m") %>%
+  filter(tumour_type == "Benign endocrine" | tumour_type =="Carcinoma and Other" | tumour_type =="Malignant brain" | tumour_type =="Malignant epithelial" |  tumour_type =="Non-malignant brain" | tumour_type =="Neuroendocrine")
+cancer_general_data_clean
+```
+
+
+
+```{r}
+cancer_general_data_clean$crude_survival_03m <- as.numeric(cancer_general_data_clean$crude_survival_03m)
+
+c <- cancer_general_data_clean %>%
+  group_by(tumour_type) %>%
+  summarize(survival = mean(crude_survival_03m, na.rm=T))
+
+c %>%
+  ggplot(aes(x=tumour_type, y=survival)) + geom_col() + theme_stata() +
+  labs(title = "Proportion of Cancer Patients surviving 3 months After Diagnosis",
+       x = "Tumor Type",y="Proportion") +theme(axis.text.x = element_text(angle = 50, hjust = 1))
+  
+```
+
+
+```{r}
+cancer_general_data_clean$crude_survival_06m <- as.numeric(cancer_general_data_clean$crude_survival_06m)
+
+d <- cancer_general_data_clean %>%
+  group_by(tumour_type) %>%
+  summarize(survival = mean(crude_survival_06m, na.rm=T))
+
+d %>%
+  ggplot(aes(x=tumour_type, y=survival)) + geom_col() + theme_stata() +
+  labs(title = "Proportion of Cancer Patients surviving 6 months After Diagnosis",
+       x = "Tumor Type",y="Proportion") +theme(axis.text.x = element_text(angle = 50, hjust = 1))
+  
+```
+
+```{r}
+cancer_general_data_clean$crude_survival_09m <- as.numeric(cancer_general_data_clean$crude_survival_09m)
+
+b <- cancer_general_data_clean %>%
+  group_by(tumour_type) %>%
+  summarize(survival = mean(crude_survival_09m, na.rm=T))
+
+b %>%
+  ggplot(aes(x=tumour_type, y=survival)) + geom_col() + theme_stata() +
+  labs(title = "Proportion of Cancer Patients surviving 9 months After Diagnosis",
+       x = "Tumor Type",y="Proportion") +theme(axis.text.x = element_text(angle = 50, hjust = 1))
+  
+```
+
+```{r}
+cancer_general_data_clean$crude_survival_12m <- as.numeric(cancer_general_data_clean$crude_survival_12m)
+
+b <- cancer_general_data_clean %>%
+  group_by(tumour_type) %>%
+  summarize(survival = mean(crude_survival_12m, na.rm=T))
+
+b %>%
+  ggplot(aes(x=tumour_type, y=survival)) + geom_col() + theme_stata() +
+  labs(title = "Proportion of Cancer Patients surviving 12 months After Diagnosis",
+       x = "Tumor Type",y="Proportion") +theme(axis.text.x = element_text(angle = 50, hjust = 1))
+  
+```
+
+```{r}
+cancer_general_data_clean$crude_survival_48m <- as.numeric(cancer_general_data_clean$crude_survival_48m)
+
+a <- cancer_general_data_clean %>%
+  group_by(tumour_type) %>%
+  summarize(survival = mean(crude_survival_48m, na.rm=T))
+
+a %>%
+  ggplot(aes(x=tumour_type, y=survival)) + geom_col() + theme_stata() +
+  labs(title = "Proportion of Cancer Patients surviving 48 months after Diagnosis",
+       x = "Tumor Type",y="Proportion") +theme(axis.text.x = element_text(angle = 50, hjust = 1))
+  
+```
+
+```{r}
+cancer_general_data_clean$crude_survival_03m <- as.numeric(cancer_general_data_clean$crude_survival_03m)
+
+b <- cancer_general_data_clean %>%
+  group_by(tumour_type) %>%
+  summarize(survival = mean(crude_survival_03m, na.rm=T))
+
+b %>%
+  ggplot(aes(x=tumour_type, y=survival)) + geom_col() + theme_stata() +
+  labs(title = "Proportion of Cancer Patients surviving 3 months After Diagnosis",
+       x = "Tumor Type",y="Proportion") +theme(axis.text.x = element_text(angle = 50, hjust = 1))
+  
+```
+
+
+```{r}
+cancer_general_data_clean$crude_survival_03m <- as.numeric(cancer_general_data_clean$crude_survival_03m)
+cancer_general_data_clean$net_survival_06m <- as.numeric(cancer_general_data_clean$net_survival_06m)
+cancer_general_data_clean$net_survival_09m <- as.numeric(cancer_general_data_clean$net_survival_09m)
+cancer_general_data_clean$net_survival_12m <- as.numeric(cancer_general_data_clean$net_survival_12m)
+cancer_general_data_clean$net_survival_48m <- as.numeric(cancer_general_data_clean$net_survival_48m)
+ui <- dashboardPage(
+  dashboardHeader(title = "Data Analysis"),
+  dashboardSidebar(disable = T),
+  dashboardBody(
+  fluidRow(
+  box(title = "Plot Options", width = 3,
+
+selectInput("x", "Select Possible Factor for Cancer Survivability", choices = c("other_care_percentage", "surgery_only_percentage", "surgery_percentage", "surgery_and_rt_percentage", "ct_only_percentage", "ct_percentage"), selected = "other_care_percentage"),
+  hr(),
+      helpText("Please see the file 'GDO_metadata' for full descriptions of the various factors for selection."),
+  ), # close the first box
+  box(title= "Factors Affecting Cancer Survivability", width = 5,
+  plotOutput("plot", width = "950px", height = "950px")
+  ) # close the second box
+  ) # close the row
+  ) # close the dashboard body
+) # close the ui
+
+server <- function(input, output, session) { 
+  output$plot <- renderPlot({
+  
+  cancer_general_data_clean %>%
+      
+  ggplot(aes_string(x=input$x, y="crude_survival_03m")) + geom_point() + theme_stata() + scale_x_discrete(breaks=c(10,20,30,40,50,60,70,80,90,100))+
+  labs(title = "Survivability of Cancer Diagnosis",
+       x = "Percentage of Selected Criteria",y="Proportion of Cancer Patients Surviving 3 Months") +theme(axis.text.x = element_text(hjust = 1))
+      
+  })
+  session$onSessionEnded(stopApp)
+  }
+
+shinyApp(ui, server)
+```
+
+
+
+
+
+```{r}
+cancer_summary <- cancer_general_data %>%
+  group_by(tumour_type) %>%
+  filter(grepl('Bladder|brain|Oral cavity|kidney|Benign endocrine |Carcinoma |endocrine',tumour_type)) %>%
+  select(tumour_type,incidence) %>%
+  group_by(tumour_type) %>%
+  summarize(total_cancer = sum(incidence))
+
+cancer_summary
+```
+
+
+```{r}
+cancer_summary %>%
+  ggplot(aes(x = tumour_type, y=total_cancer)) +
+  labs(title = "Distribution of Cancer Incidences",
+       x = "Tumor Type",
+       y = "Incidence")+ theme_light()+
+  theme(axis.text.x = element_text(angle = 30, hjust = 1))+
+  geom_col()
+
+```
+
+```{r}
+cancer_specific <- cancer_general_data %>%
+  filter(tumour_type=="Bladder" & tumour_type_2!="All" & tumour_type_3!="All") %>%
+  group_by(stage) %>%
+  summarize(tumour_type, tumour_type_2, tumour_type_3, stage, incidence, incidence_rate) %>%
+  arrange(desc(incidence_rate))
+
+cancer_specific
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
