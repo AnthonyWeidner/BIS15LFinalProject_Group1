@@ -122,7 +122,7 @@ library(shinydashboard)
 ##     box
 ```
 
-
+### Import the data set from publically available United Kingdom hospitals. Please refer to the Works Cited page on the presentation for a list of all resources that were used in the project.
 
 ```r
 cancer_general_data <- readr::read_csv("data/GDO_data_wide.csv")
@@ -495,7 +495,7 @@ cancer_general_data_clean
 ## #   crude_survival_24m_uci <chr>, …
 ```
 
-
+## The bar graph below compares cancer diagnosis survivability after 3 months depending on the type of cancer.
 
 
 ```r
@@ -519,6 +519,7 @@ c %>%
 
 ![](BIS15L-Final-Project_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
 
+## The bar graph below compares cancer diagnosis survivability after 6 months depending on the type of cancer.
 
 
 ```r
@@ -542,6 +543,8 @@ d %>%
 
 ![](BIS15L-Final-Project_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
 
+## The bar graph below compares cancer diagnosis survivability after 9 months depending on the type of cancer.
+
 
 ```r
 cancer_general_data_clean$crude_survival_09m <- as.numeric(cancer_general_data_clean$crude_survival_09m)
@@ -563,6 +566,8 @@ b %>%
 ```
 
 ![](BIS15L-Final-Project_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
+
+## The bar graph below compares cancer diagnosis survivability after 12 months depending on the type of cancer.
 
 
 ```r
@@ -586,6 +591,8 @@ b %>%
 
 ![](BIS15L-Final-Project_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
 
+## The bar graph below compares cancer diagnosis survivability after 48 months depending on the type of cancer.
+
 
 ```r
 cancer_general_data_clean$crude_survival_48m <- as.numeric(cancer_general_data_clean$crude_survival_48m)
@@ -608,13 +615,15 @@ a %>%
 
 ![](BIS15L-Final-Project_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
 
+### The bar graph below compares cancer diagnosis survivability after 3 months depending on the type of cancer when compared to people without cancer. This provides a control setting or basis of comparison to the bar graphs above.
+
 
 ```r
-cancer_general_data_clean$crude_survival_03m <- as.numeric(cancer_general_data_clean$crude_survival_03m)
+cancer_general_data_clean$net_survival_03m <- as.numeric(cancer_general_data_clean$net_survival_03m)
 
 b <- cancer_general_data_clean %>%
   group_by(tumour_type) %>%
-  summarize(survival = mean(crude_survival_03m, na.rm=T))
+  summarize(survival = mean(net_survival_03m, na.rm=T))
 ```
 
 ```
@@ -676,6 +685,7 @@ shinyApp(ui, server)
 `<div style="width: 100% ; height: 400px ; text-align: center; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;" class="muted well">Shiny applications not supported in static R Markdown documents</div>`{=html}
 
 
+### We will now analyze the incidences of a multitude of cancer types.
 
 
 
@@ -725,6 +735,8 @@ cancer_summary %>%
 ```
 
 ![](BIS15L-Final-Project_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
+
+### We can zoom-in to details about bladder cancer.
 
 
 ```r

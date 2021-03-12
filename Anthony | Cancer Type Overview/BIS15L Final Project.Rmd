@@ -30,7 +30,7 @@ library(shiny)
 library(shinydashboard)
 ```
 
-
+### Import the data set from publically available United Kingdom hospitals. Please refer to the Works Cited page on the presentation for a list of all resources that were used in the project.
 ```{r}
 cancer_general_data <- readr::read_csv("data/GDO_data_wide.csv")
 cancer_general_data <- janitor::clean_names(cancer_general_data)
@@ -55,7 +55,7 @@ cancer_general_data_clean <- cancer_general_data %>%
 cancer_general_data_clean
 ```
 
-
+## The bar graph below compares cancer diagnosis survivability after 3 months depending on the type of cancer.
 
 ```{r}
 cancer_general_data_clean$crude_survival_03m <- as.numeric(cancer_general_data_clean$crude_survival_03m)
@@ -71,6 +71,7 @@ c %>%
   
 ```
 
+## The bar graph below compares cancer diagnosis survivability after 6 months depending on the type of cancer.
 
 ```{r}
 cancer_general_data_clean$crude_survival_06m <- as.numeric(cancer_general_data_clean$crude_survival_06m)
@@ -86,6 +87,8 @@ d %>%
   
 ```
 
+## The bar graph below compares cancer diagnosis survivability after 9 months depending on the type of cancer.
+
 ```{r}
 cancer_general_data_clean$crude_survival_09m <- as.numeric(cancer_general_data_clean$crude_survival_09m)
 
@@ -99,6 +102,8 @@ b %>%
        x = "Tumor Type",y="Proportion") +theme(axis.text.x = element_text(angle = 50, hjust = 1))
   
 ```
+
+## The bar graph below compares cancer diagnosis survivability after 12 months depending on the type of cancer.
 
 ```{r}
 cancer_general_data_clean$crude_survival_12m <- as.numeric(cancer_general_data_clean$crude_survival_12m)
@@ -114,6 +119,8 @@ b %>%
   
 ```
 
+## The bar graph below compares cancer diagnosis survivability after 48 months depending on the type of cancer.
+
 ```{r}
 cancer_general_data_clean$crude_survival_48m <- as.numeric(cancer_general_data_clean$crude_survival_48m)
 
@@ -128,12 +135,14 @@ a %>%
   
 ```
 
+### The bar graph below compares cancer diagnosis survivability after 3 months depending on the type of cancer when compared to people without cancer. This provides a control setting or basis of comparison to the bar graphs above.
+
 ```{r}
-cancer_general_data_clean$crude_survival_03m <- as.numeric(cancer_general_data_clean$crude_survival_03m)
+cancer_general_data_clean$net_survival_03m <- as.numeric(cancer_general_data_clean$net_survival_03m)
 
 b <- cancer_general_data_clean %>%
   group_by(tumour_type) %>%
-  summarize(survival = mean(crude_survival_03m, na.rm=T))
+  summarize(survival = mean(net_survival_03m, na.rm=T))
 
 b %>%
   ggplot(aes(x=tumour_type, y=survival)) + geom_col() + theme_stata() +
@@ -185,6 +194,7 @@ shinyApp(ui, server)
 ```
 
 
+### We will now analyze the incidences of a multitude of cancer types.
 
 
 
@@ -210,6 +220,8 @@ cancer_summary %>%
   geom_col()
 
 ```
+
+### We can zoom-in to details about bladder cancer.
 
 ```{r}
 cancer_specific <- cancer_general_data %>%
