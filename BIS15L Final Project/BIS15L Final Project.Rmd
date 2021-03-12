@@ -161,7 +161,7 @@ selectInput("x", "Select Possible Factor for Cancer Survivability", choices = c(
       helpText("Please see the file 'GDO_metadata' for full descriptions of the various factors for selection."),
   ), # close the first box
   box(title= "Factors Affecting Cancer Survivability", width = 5,
-  plotOutput("plot", width = "950px", height = "950px")
+  plotOutput("plot", width = "600px", height = "600px")
   ) # close the second box
   ) # close the row
   ) # close the dashboard body
