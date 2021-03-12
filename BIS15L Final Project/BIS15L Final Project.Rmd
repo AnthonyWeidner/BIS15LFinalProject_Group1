@@ -1,6 +1,6 @@
 ---
 title: "Bis15L Final Project"
-author: "Anthony Weidner"
+author: "Anthony Weidner, Jiaying Liu, Omar Afzal"
 date: "`r Sys.Date()`"
 output:
   html_document: 
@@ -25,24 +25,177 @@ library(janitor)
 library(here)
 options(scipen=999) #disables scientific notation when printing
 library(ggthemes)
+library(skimr)
+library(shiny)
+library(shinydashboard)
 ```
 
-## Gapminder
-For this assignment, we are going to use data from  [gapminder](https://www.gapminder.org/). Gapminder includes information about economics, population, social issues, and life expectancy from countries all over the world. We will use three data sets, so please load all three.  
 
-One thing to note is that the data include years beyond 2021. These are projections based on modeling done by the gapminder organization. Start by importing the data.
 ```{r}
 cancer_general_data <- readr::read_csv("data/GDO_data_wide.csv")
 cancer_general_data <- janitor::clean_names(cancer_general_data)
 cancer_general_data
 ```
+
+
+
+#Taking a glance at the data set.
+```{r}
+skim(cancer_general_data)
+```
+
+
+
+#Cleaning up the data so that missing values are stored as NAs.
+```{r}
+cancer_general_data_clean <- cancer_general_data %>%
+  na_if(".a") %>%
+  na_if(".b") %>% na_if(".c") %>% na_if(".d") %>% na_if(".e") %>% na_if(".f") %>% na_if(".g") %>% na_if(".h") %>% na_if(".i") %>% na_if(".j")%>% na_if(".k")%>% na_if(".m") %>%
+  filter(tumour_type == "Benign endocrine" | tumour_type =="Carcinoma and Other" | tumour_type =="Malignant brain" | tumour_type =="Malignant epithelial" |  tumour_type =="Non-malignant brain" | tumour_type =="Neuroendocrine")
+cancer_general_data_clean
+```
+
+
+
+```{r}
+cancer_general_data_clean$crude_survival_03m <- as.numeric(cancer_general_data_clean$crude_survival_03m)
+
+c <- cancer_general_data_clean %>%
+  group_by(tumour_type) %>%
+  summarize(survival = mean(crude_survival_03m, na.rm=T))
+
+c %>%
+  ggplot(aes(x=tumour_type, y=survival)) + geom_col() + theme_stata() +
+  labs(title = "Proportion of Cancer Patients surviving 3 months After Diagnosis",
+       x = "Tumor Type",y="Proportion") +theme(axis.text.x = element_text(angle = 50, hjust = 1))
+  
+```
+
+
+```{r}
+cancer_general_data_clean$crude_survival_06m <- as.numeric(cancer_general_data_clean$crude_survival_06m)
+
+d <- cancer_general_data_clean %>%
+  group_by(tumour_type) %>%
+  summarize(survival = mean(crude_survival_06m, na.rm=T))
+
+d %>%
+  ggplot(aes(x=tumour_type, y=survival)) + geom_col() + theme_stata() +
+  labs(title = "Proportion of Cancer Patients surviving 6 months After Diagnosis",
+       x = "Tumor Type",y="Proportion") +theme(axis.text.x = element_text(angle = 50, hjust = 1))
+  
+```
+
+```{r}
+cancer_general_data_clean$crude_survival_09m <- as.numeric(cancer_general_data_clean$crude_survival_09m)
+
+b <- cancer_general_data_clean %>%
+  group_by(tumour_type) %>%
+  summarize(survival = mean(crude_survival_09m, na.rm=T))
+
+b %>%
+  ggplot(aes(x=tumour_type, y=survival)) + geom_col() + theme_stata() +
+  labs(title = "Proportion of Cancer Patients surviving 9 months After Diagnosis",
+       x = "Tumor Type",y="Proportion") +theme(axis.text.x = element_text(angle = 50, hjust = 1))
+  
+```
+
+```{r}
+cancer_general_data_clean$crude_survival_12m <- as.numeric(cancer_general_data_clean$crude_survival_12m)
+
+b <- cancer_general_data_clean %>%
+  group_by(tumour_type) %>%
+  summarize(survival = mean(crude_survival_12m, na.rm=T))
+
+b %>%
+  ggplot(aes(x=tumour_type, y=survival)) + geom_col() + theme_stata() +
+  labs(title = "Proportion of Cancer Patients surviving 12 months After Diagnosis",
+       x = "Tumor Type",y="Proportion") +theme(axis.text.x = element_text(angle = 50, hjust = 1))
+  
+```
+
+```{r}
+cancer_general_data_clean$crude_survival_48m <- as.numeric(cancer_general_data_clean$crude_survival_48m)
+
+a <- cancer_general_data_clean %>%
+  group_by(tumour_type) %>%
+  summarize(survival = mean(crude_survival_48m, na.rm=T))
+
+a %>%
+  ggplot(aes(x=tumour_type, y=survival)) + geom_col() + theme_stata() +
+  labs(title = "Proportion of Cancer Patients surviving 48 months after Diagnosis",
+       x = "Tumor Type",y="Proportion") +theme(axis.text.x = element_text(angle = 50, hjust = 1))
+  
+```
+
+```{r}
+cancer_general_data_clean$crude_survival_03m <- as.numeric(cancer_general_data_clean$crude_survival_03m)
+
+b <- cancer_general_data_clean %>%
+  group_by(tumour_type) %>%
+  summarize(survival = mean(crude_survival_03m, na.rm=T))
+
+b %>%
+  ggplot(aes(x=tumour_type, y=survival)) + geom_col() + theme_stata() +
+  labs(title = "Proportion of Cancer Patients surviving 3 months After Diagnosis",
+       x = "Tumor Type",y="Proportion") +theme(axis.text.x = element_text(angle = 50, hjust = 1))
+  
+```
+
+
+```{r}
+cancer_general_data_clean$crude_survival_03m <- as.numeric(cancer_general_data_clean$crude_survival_03m)
+cancer_general_data_clean$net_survival_06m <- as.numeric(cancer_general_data_clean$net_survival_06m)
+cancer_general_data_clean$net_survival_09m <- as.numeric(cancer_general_data_clean$net_survival_09m)
+cancer_general_data_clean$net_survival_12m <- as.numeric(cancer_general_data_clean$net_survival_12m)
+cancer_general_data_clean$net_survival_48m <- as.numeric(cancer_general_data_clean$net_survival_48m)
+ui <- dashboardPage(
+  dashboardHeader(title = "Data Analysis"),
+  dashboardSidebar(disable = T),
+  dashboardBody(
+  fluidRow(
+  box(title = "Plot Options", width = 3,
+
+selectInput("x", "Select Possible Factor for Cancer Survivability", choices = c("other_care_percentage", "surgery_only_percentage", "surgery_percentage", "surgery_and_rt_percentage", "ct_only_percentage", "ct_percentage"), selected = "other_care_percentage"),
+  hr(),
+      helpText("Please see the file 'GDO_metadata' for full descriptions of the various factors for selection."),
+  ), # close the first box
+  box(title= "Factors Affecting Cancer Survivability", width = 5,
+  plotOutput("plot", width = "950px", height = "950px")
+  ) # close the second box
+  ) # close the row
+  ) # close the dashboard body
+) # close the ui
+
+server <- function(input, output, session) { 
+  output$plot <- renderPlot({
+  
+  cancer_general_data_clean %>%
+      
+  ggplot(aes_string(x=input$x, y="crude_survival_03m")) + geom_point() + theme_stata() + scale_x_discrete(breaks=c(10,20,30,40,50,60,70,80,90,100))+
+  labs(title = "Survivability of Cancer Diagnosis",
+       x = "Percentage of Selected Criteria",y="Proportion of Cancer Patients Surviving 3 Months") +theme(axis.text.x = element_text(hjust = 1))
+      
+  })
+  session$onSessionEnded(stopApp)
+  }
+
+shinyApp(ui, server)
+```
+
+
+
+
+
 ```{r}
 cancer_summary <- cancer_general_data %>%
   group_by(tumour_type) %>%
-  filter(grepl('Bladder|brain|Oral cavity|kidney',tumour_type)) %>%
+  filter(grepl('Bladder|brain|Oral cavity|kidney|Benign endocrine |Carcinoma |endocrine',tumour_type)) %>%
   select(tumour_type,incidence) %>%
   group_by(tumour_type) %>%
   summarize(total_cancer = sum(incidence))
+
+cancer_summary
 ```
 
 
@@ -51,8 +204,8 @@ cancer_summary %>%
   ggplot(aes(x = tumour_type, y=total_cancer)) +
   labs(title = "Distribution of Cancer Incidences",
        x = "Tumor Type",
-       y = "Incidence")+ theme_stata()+
-  theme(axis.text.x = element_text(angle = 10, hjust = 1))+
+       y = "Incidence")+ theme_light()+
+  theme(axis.text.x = element_text(angle = 30, hjust = 1))+
   geom_col()
 
 ```
@@ -67,49 +220,282 @@ cancer_specific <- cancer_general_data %>%
 cancer_specific
 ```
 
-```{r}
-cancer_specific %>%
-  group_by(stage) %>%
-  ggplot(aes(x = stage, y=incidence)) +
-  labs(title = "Distribution of Cancer Incidences",
-       x = "Tumor Type",
-       y = "Incidence")+ theme_stata()+
-  theme(axis.text.x = element_text(angle = 10, hjust = 1))+
-  geom_col()
 
+
+#----------Jiaying--------------
+
+
+
+
+
+## Load the libraries
+```{r}
+library(tidyverse)
+library(janitor)
+options(scipen=999) #disables scientific notation when printing
+library(ggthemes)
+library(shiny)
+library(shinydashboard)
+```
+
+## Import the breast cancer data
+```{r}
+breast_cancer <- readr::read_csv("data/METABRIC_RNA_Mutation.csv")
+```
+
+## Clean up the data (get rid of the genomics data)
+```{r}
+breast_cancer_clean <- breast_cancer %>%
+  select(1:31)
+view(breast_cancer_clean)
+```
+
+## Distribution of age at diagnosis (among 1904 incidences)
+```{r}
+breast_cancer_clean$age_new<-cut(breast_cancer_clean$age_at_diagnosis, seq(20,100,10))
+```
+```{r}
+breast_cancer_clean %>%
+  ggplot(aes(x = age_new, fill = age_new)) +
+  geom_bar() +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1), plot.title = element_text(hjust = 0.5)) +
+  labs(title = "Distribution of Age at Diagnosis",
+       x = "Age Range",
+       fill= "Age Range")
+```
+
+## Relation between age at diagnosis and overall survival rate (among 622 deaths)
+
+```{r}
+breast_cancer_clean %>%
+  filter(death_from_cancer == "Died of Disease")
 ```
 
 ```{r}
-cancer_general_data %>%
-  filter(tumour_type=="Bladder") %>%
-  ggplot(aes(x=year,y=incidence,group=stage, color = stage))+
-  geom_line()+
-  geom_point(shape=5)+
-  scale_x_discrete(breaks=c(2013,2014,2015,2016,2017,2017))+
-  labs(title = "Incidences of Bladder Cancer based on stage",
-       x = "Year",y="Incidence") + theme_stata()
+breast_cancer_clean %>%
+  filter(death_from_cancer == "Died of Disease") %>%
+  ggplot(aes(x = age_at_diagnosis, y = overall_survival_months)) +
+  geom_point(size = 1, na.rm = T) +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1), plot.title = element_text(hjust = 0.5)) +
+  labs(title = "Age at Diagnosis vs. Overall Survival Rate in Deaths",
+       x = "Age at Diagnosis",
+       y = "Overall Survival Months")
+```
+It is hard to tell if a linear relation exists, but from this pattern, we do have some observations: for the group 20-40, no super long survival was listed, this tends to be caused by easier recovery due to young ages; for the group 80-100, no super long suvival was listed, this tends to be caused by the rare incidences and death from other diseases.
+
+## Comparison of survival length between treated and non-treated groups
+### No further treatment received after surgery:
+```{r}
+breast_cancer_clean %>%
+  select(patient_id, chemotherapy, hormone_therapy, radio_therapy, overall_survival_months, death_from_cancer) %>%
+  filter(chemotherapy == "0" & hormone_therapy == "0" & radio_therapy == "0" & death_from_cancer == "Died of Disease") %>%
+  summarise(avg_survival_nontreat = mean(overall_survival_months, na.rm = T))
+```
+### Some further treatment received after surgery:
+```{r}
+breast_cancer_clean %>%
+  select(patient_id, chemotherapy, hormone_therapy, radio_therapy, overall_survival_months, death_from_cancer) %>%
+  filter(chemotherapy == "1" | hormone_therapy == "1" | radio_therapy == "1" & death_from_cancer == "Died of Disease") %>%
+  summarise(avg_survival_treat = mean(overall_survival_months, na.rm = T))
+```
+
+## Build shiny app to show the relationship between overall survival months and mutation count/positive lymph nodes/tumor stage/tumor size
+```{r}
+
+ui <- dashboardPage(skin = "blue",
+  dashboardHeader(title = "Tumor Features"),
+  dashboardSidebar(disable = T),
+  dashboardBody(
+  fluidRow(
+  box(title = "Plot Options", width = 3,
+  selectInput("x", "Select Tumor Features", choices = c("tumor_size", "tumor_stage", "mutation_count", "lymph_nodes_examined_positive"), selected = "tumor_size"),
+  hr(),
+      helpText("Source: METABRIC database"),
+  ), 
+  box(title= "Tumor Features vs. Overall Survival Months", width = 5,
+  plotOutput("plot", width = "500px", height = "500px")
+  )
+  )
+  ) 
+) 
+
+server <- function(input, output, session) { 
+  
+  output$plot <- renderPlot({
+    breast_cancer_clean %>% 
+      filter(death_from_cancer == "Died of Disease") %>%
+      ggplot(aes_string(x = input$x, y = "overall_survival_months")) +
+      geom_point(alpha=0.9, size=2) +
+      theme_grey(base_size = 18)+ labs(x="Tumor Feature", y="Overall Survival Months", fill="Fill Variable")+
+      theme(axis.text.x = element_text(angle = 65, hjust = 1))
+  })
+  
+  session$onSessionEnded(stopApp)
+  }
+shinyApp(ui, server)
+```
+
+
+
+
+
+#-------Omar-------
+
+## Load the libraries
+```{r}
+library(tidyverse)
+library(janitor)
+library(here)
+library(ggthemes)
+if (!require("qqman")) install.packages('qqman')
+library(qqman)
+library(dplyr)
+if (!require("ggrepel")) install.packages('ggrepel')
+library(ggrepel)
+```
+
+
+```{r}
+#What are SNPs and why do they matter? Cancer is a conglomerate of gain-of-function of oncogenes and the loss-of-function of tumor suppressor genes. Identification of single-nucleotide polymorphisms and other mutations at important gene sites can be correlated with being cancer drivers in addition to their disease rates and severity. 
 ```
 
 ```{r}
-cancer_general_data %>%
-  filter(tumour_type=="Oral cavity") %>%
-  ggplot(aes(x=year,y=incidence,group=stage, color = stage))+
-  geom_line()+
-  geom_point(shape=5)+
-  scale_x_discrete(breaks=c(2013,2014,2015,2016,2017,2017))+
-  labs(title = "Oral Cavity Cancer based on Stage",
-       x = "Year",y="Incidence") + theme_stata()
+#How do we interpret odds ratios and GWAS statistics?
+
+#What are the odds of developing breast cancer if my Chromosome 5 - position 58804536 (rs4326095 SNP) alleles are "GA"?
+```
+$$
+\textrm{odds if GA} = \frac{\textrm{breast cancer|GA}}{\textrm{no breast cancer|GA}} 
+$$
+$$
+\textrm{odds if GC or AT} = \frac{\textrm{breast cancer|GC or AT}}{\textrm{no breast cancer|GC or AT}}
+$$
+$$
+\textrm{odds ratio} = \frac{\textrm{odds if GA}}{\textrm{odds if GC or AT}} = 1.4084 
+$$
+
+```{r}
+SNP_data <- readr::read_csv("data/SNPv2.csv")
+SNP_data <- janitor::clean_names(SNP_data)
+glimpse(SNP_data) #Association between a single SNP and breast cancer susceptibility in a group of 1,145 breast cancer patients and 1,142 controls.
+SNP_data %>%
+  arrange(desc(odds_ratio))
+
 ```
 
 
 ```{r}
-cancer_general_data %>%
-  filter(tumour_type=="Malignant kidney cancer") %>%
-  ggplot(aes(x=year,y=incidence,group=stage, color = stage))+
-  geom_line()+
-  geom_point(shape=5)+
-  scale_x_discrete(breaks=c(2013,2014,2015,2016,2017,2017))+
-  labs(title = "Malignant Kidney Cancer Distribution",
-       x = "Year",y="Incidence") + theme_stata()
+SNP_data %>%
+  group_by(chr_id) %>%
+  summarise(n_distinct(snp_id))
 ```
+
+```{r}
+SNP_data %>%
+  ggplot(aes(x = chr_id, y=n_distinct(snp_id))) +
+  labs(title = "Distribution of SNPs",
+       x = "Chromosome",
+       y = "SNP count")+ theme_stata()+
+  theme(axis.text.x = element_text(hjust = 1))+
+  geom_col(fill="green",color="black")+
+  scale_x_continuous(breaks = seq(1, 21, by = 1))
+SNP_data %>% 
+  ggplot(aes(x=chr_id, fill=n_distinct(snp_id))) + geom_density(alpha=.4)
+```
+
+
+```{r}
+SNP_data_causal <- SNP_data %>%
+  filter(p_value<0.1)%>% #p-value from HWE testing in cases of breast cancer
+  group_by(chr_id) %>%
+  summarise(n_distinct(snp_id))
+  
+```
+
+```{r}
+SNP_data_causal %>%
+  ggplot(aes(x = chr_id, y=`n_distinct(snp_id)`)) +
+  labs(title = "Distribution of SNPs with p-value <0.1",
+       x = "Chromosome",
+       y = "SNP count")+ theme_stata()+
+  theme(axis.text.x = element_text(hjust = 1))+
+  geom_col(fill="pink",color="black")
+ 
+```
+
+```{r}
+### MANHATTAN GRAPH - too advanced to draw by hand ###
+don <- gwasResults %>% 
+  
+  # Compute chromosome size
+  group_by(CHR) %>% 
+  summarise(chr_len=max(BP)) %>% 
+  
+  # Calculate cumulative position of each chromosome
+  mutate(tot=cumsum(chr_len)-chr_len) %>%
+  select(-chr_len) %>%
+  
+  # Add this info to the initial dataset
+  left_join(gwasResults, ., by=c("CHR"="CHR")) %>%
+  
+  # Add a cumulative position of each SNP
+  arrange(CHR, BP) %>%
+  mutate( Chromosome=BP+tot) %>%
+
+  # Add highlight and annotation information
+  mutate( is_highlight=ifelse(SNP %in% snpsOfInterest, "yes", "no")) %>%
+  mutate( is_annotate=ifelse(-log10(P)>4, "yes", "no")) 
+
+# Prepare X axis
+axisdf <- don %>% group_by(CHR) %>% summarize(center=( max(Chromosome) + min(Chromosome) ) / 2 )
+
+# Make the plot
+ggplot(don, aes(x=Chromosome, y=-log10(P))) +
+    
+    # Show all points
+    geom_point( aes(color=as.factor(CHR)), alpha=0.8, size=1.3) +
+    scale_color_manual(values = rep(c("grey", "skyblue"), 22 )) +
+    
+    # custom X axis:
+    scale_x_continuous( label = axisdf$CHR, breaks= axisdf$center ) +
+    scale_y_continuous(expand = c(0, 0) ) +     # remove space between plot area and x axis
+
+    # Add highlighted points
+    geom_point(data=subset(don, is_highlight=="yes"), color="orange", size=2) +
+
+    # Custom the theme:
+    theme_bw() +
+    theme( 
+      legend.position="none",
+      panel.border = element_blank(),
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor.x = element_blank()
+    )
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
