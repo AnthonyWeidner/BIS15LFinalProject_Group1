@@ -2,10 +2,8 @@
 title: "Bis15L Final Project"
 author: "Anthony Weidner"
 date: "`r Sys.Date()`"
-output:
-  html_document: 
-    keep_md: yes
-    theme: spacelab
+output: html_notebook
+runtime: shiny
 ---
 
 ```{r setup, include=FALSE}
