@@ -220,7 +220,7 @@ cancer_general_data
 
 
 
-#Taking a glance at the data set.
+## Taking a glance at the data set.
 
 ```r
 skim(cancer_general_data)
@@ -416,7 +416,7 @@ Table: Data summary
 
 
 
-#Cleaning up the data so that missing values are stored as NAs.
+## Cleaning up the data so that missing values are stored as NAs. The full description of inputs for missing values is reflected in the file GDO_missing.csv. 
 
 ```r
 cancer_general_data_clean <- cancer_general_data %>%
@@ -630,6 +630,7 @@ b %>%
 
 ![](BIS15L-Final-Project_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
 
+### In the Shiny App written for this part of the project, please refer to the file GDO_metadata.csv for the full description of the the drop-down menu items.
 
 
 ```r
@@ -647,7 +648,7 @@ ui <- dashboardPage(
 
 selectInput("x", "Select Possible Factor for Cancer Survivability", choices = c("other_care_percentage", "surgery_only_percentage", "surgery_percentage", "surgery_and_rt_percentage", "ct_only_percentage", "ct_percentage"), selected = "other_care_percentage"),
   hr(),
-      helpText("Please see the file 'GDO_metadata' for full descriptions of the various factors for selection."),
+      helpText("Please see the file 'GDO_metadata' in the data folder for full descriptions of the various factors for selection."),
   ), # close the first box
   box(title= "Factors Affecting Cancer Survivability", width = 5,
   plotOutput("plot", width = "600px", height = "600px")
